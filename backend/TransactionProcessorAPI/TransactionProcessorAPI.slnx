@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/Artifacts/">
+    <Project Path="TransactionProcessorAPI.WebAPI.csproj" />
+  </Folder>
+  <Folder Name="/Domain/">
+    <Project Path="../TransactionProcessor.Common/TransactionProcessor.Common.csproj" />
+    <Project Path="../TransactionProcessor.Core/TransactionProcessor.Core.csproj" />
+    <Project Path="../TransactionProcessor.Services/TransactionProcessor.Services.csproj" />
+  </Folder>
+  <Folder Name="/Infrastructure/" />
+  <Folder Name="/Infrastructure/DataAccess/">
+    <Project Path="../TransactionProcessor.Integrations.DataAccess/TransactionProcessor.Integrations.DataAccess.csproj" />
+  </Folder>
+</Solution>

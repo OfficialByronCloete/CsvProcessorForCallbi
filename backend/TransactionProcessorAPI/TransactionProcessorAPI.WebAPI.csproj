@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include=".github\copilot-instructions.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TransactionProcessor.Common\TransactionProcessor.Common.csproj" />
+    <ProjectReference Include="..\TransactionProcessor.Core\TransactionProcessor.Core.csproj" />
+    <ProjectReference Include="..\TransactionProcessor.Integrations.DataAccess\TransactionProcessor.Integrations.DataAccess.csproj" />
+    <ProjectReference Include="..\TransactionProcessor.Services\TransactionProcessor.Services.csproj" />
+  </ItemGroup>
+
+</Project>
