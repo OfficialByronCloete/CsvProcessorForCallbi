@@ -78,6 +78,14 @@ public class TransactionsControllerTests
     public async Task UploadCsv_ValidFile_CallsServiceAndReturnsOk()
     {
         // Arrange
+        _transactionService
+            .Setup(s => s.ParseAndSubmitTransactionCsvAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new CsvImportSummary
+            {
+                AddedCount = 1,
+                DuplicateCount = 0,
+                TotalProcessedCount = 1
+            });
         const string csv = "TransactionTime,Amount,Description,TransactionId\n01/03/2026,10.50,Payment,11111111-1111-1111-1111-111111111111";
         using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(csv));
         IFormFile file = new FormFile(stream, 0, stream.Length, "file", "transactions.csv");
@@ -89,6 +97,32 @@ public class TransactionsControllerTests
         var ok = result as OkObjectResult;
         Assert.IsNotNull(ok);
         _transactionService.Verify(s => s.ParseAndSubmitTransactionCsvAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task UploadCsv_NoNewRows_ReturnsNoNewTransactionsMessage()
+    {
+        // Arrange
+        _transactionService
+            .Setup(s => s.ParseAndSubmitTransactionCsvAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new CsvImportSummary
+            {
+                AddedCount = 0,
+                DuplicateCount = 3,
+                TotalProcessedCount = 3
+            });
+        const string csv = "TransactionTime,Amount,Description,TransactionId\n01/03/2026,10.50,Payment,11111111-1111-1111-1111-111111111111";
+        using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(csv));
+        IFormFile file = new FormFile(stream, 0, stream.Length, "file", "transactions.csv");
+
+        // Act
+        var result = await _sut.UploadCsv(file, CancellationToken.None);
+
+        // Assert
+        var ok = result as OkObjectResult;
+        Assert.IsNotNull(ok);
+        var message = ok.Value?.GetType().GetProperty("message")?.GetValue(ok.Value)?.ToString();
+        Assert.AreEqual("No new transactions were added. Duplicates found: 3.", message);
     }
 
     [TestMethod]

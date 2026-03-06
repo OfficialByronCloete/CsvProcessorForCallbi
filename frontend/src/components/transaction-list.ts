@@ -1,5 +1,6 @@
 import type { Transaction } from '../models/transaction';
 import { TransactionsService } from '../services/transactions-service';
+import type { CsvImportResult } from '../models/csv-import-result';
 
 export class TransactionList {
   private readonly transactionsService = new TransactionsService();
@@ -80,7 +81,8 @@ export class TransactionList {
 
     this.isUploading = true;
     try {
-      this.uploadSuccessMessage = await this.transactionsService.uploadTransactionsCsv(file);
+      const result = await this.transactionsService.uploadTransactionsCsv(file);
+      this.uploadSuccessMessage = this.getUploadSummaryMessage(result);
       this.selectedFiles = null;
       this.pageNumber = 1;
       await this.loadTransactions();
@@ -89,6 +91,18 @@ export class TransactionList {
     } finally {
       this.isUploading = false;
     }
+  }
+
+  private getUploadSummaryMessage(result: CsvImportResult): string {
+    if (result.message) {
+      return result.message;
+    }
+
+    const added = result.addedCount ?? 0;
+    const duplicates = result.duplicateCount ?? 0;
+    return added === 0
+      ? `No new transactions were added. Duplicates found: ${duplicates}.`
+      : `Upload complete. Added ${added} transaction(s). Duplicates found: ${duplicates}.`;
   }
 
   public async deleteTransaction(transactionId: string): Promise<void> {

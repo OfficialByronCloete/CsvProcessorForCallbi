@@ -45,12 +45,35 @@ public class TransactionServiceTests
             """;
 
         // Act
-        await _sut.ParseAndSubmitTransactionCsvAsync(ToStream(csv), CancellationToken.None);
+        var result = await _sut.ParseAndSubmitTransactionCsvAsync(ToStream(csv), CancellationToken.None);
 
         // Assert
+        Assert.AreEqual(2, result.AddedCount);
+        Assert.AreEqual(0, result.DuplicateCount);
         Assert.IsNotNull(capturedTransactions);
         Assert.HasCount(2, capturedTransactions);
         _transactionRepository.Verify(r => r.SubmitTransactionsAsync(It.IsAny<IReadOnlyCollection<TransactionModel>>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task ParseAndSubmitTransactionCsvAsync_AllDuplicates_ReturnsZeroAddedAndDuplicateCount()
+    {
+        // Arrange
+        _transactionRepository
+            .Setup(r => r.SubmitTransactionsAsync(It.IsAny<IReadOnlyCollection<TransactionModel>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(0);
+        var csv = """
+            TransactionTime,Amount,Description,TransactionId
+            01/03/2026,10.50,Payment,11111111-1111-1111-1111-111111111111
+            """;
+
+        // Act
+        var result = await _sut.ParseAndSubmitTransactionCsvAsync(ToStream(csv), CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual(0, result.AddedCount);
+        Assert.AreEqual(1, result.DuplicateCount);
+        Assert.AreEqual(1, result.TotalProcessedCount);
     }
 
     [TestMethod]

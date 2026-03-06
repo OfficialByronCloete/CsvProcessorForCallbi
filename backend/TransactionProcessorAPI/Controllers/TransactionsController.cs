@@ -28,8 +28,11 @@ public sealed class TransactionsController(
             return BadRequest("Invalid file type. Only CSV files are allowed.");
 
         await using var stream = file.OpenReadStream();
-        await transactionService.ParseAndSubmitTransactionCsvAsync(stream, cancellationToken);
-        return Ok(new { message = "File uploaded and processed successfully." });
+        var importSummary = await transactionService.ParseAndSubmitTransactionCsvAsync(stream, cancellationToken);
+        var message = importSummary.AddedCount == 0
+            ? $"No new transactions were added. Duplicates found: {importSummary.DuplicateCount}."
+            : $"Upload complete. Added {importSummary.AddedCount} transaction(s). Duplicates found: {importSummary.DuplicateCount}.";
+        return Ok(new { message, importSummary.AddedCount, importSummary.DuplicateCount, importSummary.TotalProcessedCount });
     }
 
     [HttpPut("{transactionId:guid}")]

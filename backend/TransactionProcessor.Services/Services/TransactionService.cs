@@ -22,7 +22,7 @@ public class TransactionService(
 
     private const int RequiredAmountDecimalPlaces = 2;
 
-    public async Task ParseAndSubmitTransactionCsvAsync(Stream csvStream, CancellationToken cancellationToken)
+    public async Task<CsvImportSummary> ParseAndSubmitTransactionCsvAsync(Stream csvStream, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(csvStream);
 
@@ -70,7 +70,15 @@ public class TransactionService(
             transactions.Add(transaction);
         }
 
-        await transactionRepository.SubmitTransactionsAsync(transactions, cancellationToken);
+        var addedCount = await transactionRepository.SubmitTransactionsAsync(transactions, cancellationToken);
+        var duplicateCount = transactions.Count - addedCount;
+
+        return new CsvImportSummary
+        {
+            AddedCount = addedCount,
+            DuplicateCount = duplicateCount,
+            TotalProcessedCount = transactions.Count
+        };
     }
 
     public Task<PagedResult<TransactionModel>> GetTransactionsAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)

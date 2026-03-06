@@ -1,4 +1,5 @@
 import { environment } from '../environments/environment';
+import type { CsvImportResult } from '../models/csv-import-result';
 import type { PagedResult } from '../models/paged-result';
 import type { ProblemDetails } from '../models/problem-details';
 import type { Transaction } from '../models/transaction';
@@ -15,7 +16,7 @@ export class TransactionsService {
     return await response.json() as PagedResult<Transaction>;
   }
 
-  public async uploadTransactionsCsv(file: File): Promise<string> {
+  public async uploadTransactionsCsv(file: File): Promise<CsvImportResult> {
     const formData = new FormData();
     formData.append('file', file);
     const response = await fetch(`${transactionsEndpoint}/imports`, {
@@ -26,8 +27,7 @@ export class TransactionsService {
       throw new Error(await this.getErrorMessage(response, `Failed to upload CSV (${response.status})`));
     }
 
-    const result = await response.json() as { message?: string };
-    return result.message ?? 'CSV uploaded successfully.';
+    return await response.json() as CsvImportResult;
   }
 
   public async deleteTransaction(transactionId: string): Promise<void> {
