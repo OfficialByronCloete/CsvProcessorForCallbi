@@ -1,0 +1,32 @@
+services:
+  sqlite:
+    image: keinos/sqlite3:latest
+    user: "0:0"
+    command: sh -c "mkdir -p /data && touch /data/transactions.db && sqlite3 /data/transactions.db '.databases' && tail -f /dev/null"
+    volumes:
+      - sqlite-data:/data
+
+  backend:
+    build:
+      context: ./backend
+    depends_on:
+      - sqlite
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__TransactionProcessor: Data Source=/data/transactions.db
+    ports:
+      - "5062:8080"
+    volumes:
+      - sqlite-data:/data
+
+  frontend:
+    build:
+      context: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "9000:9000"
+
+volumes:
+  sqlite-data:

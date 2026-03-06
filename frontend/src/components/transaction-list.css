@@ -1,0 +1,169 @@
+.transactions {
+  margin: 2rem auto;
+  max-width: 1100px;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgb(15 23 42 / 10%);
+}
+
+.transactions-title {
+  margin: 0 0 1rem;
+  font-size: 1.5rem;
+  color: #0f172a;
+}
+
+.transactions-upload {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 0 0 1rem;
+}
+
+.transactions-file-input {
+  max-width: 320px;
+}
+
+.transactions-status {
+  margin: 0 0 1rem;
+  color: #334155;
+}
+
+.transactions-status-success {
+  color: #166534;
+}
+
+.transactions-status-error {
+  color: #b91c1c;
+}
+
+.transactions-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.transactions-table thead {
+  background: #f8fafc;
+}
+
+.transactions-table th,
+.transactions-table td {
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.transactions-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.transactions-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.transactions-page {
+  color: #334155;
+}
+
+.transactions-button {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #0f172a;
+  font-weight: 600;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+}
+
+.transactions-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.transactions-button:hover:enabled {
+  background: #e2e8f0;
+}
+
+.transactions-actions {
+  display: inline-flex;
+  gap: 0.4rem;
+}
+
+.transactions-actions-column {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.transactions-edit-button,
+.transactions-delete-button,
+.transactions-confirm-button,
+.transactions-discard-button {
+  border-radius: 8px;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0.35rem 0.55rem;
+  cursor: pointer;
+}
+
+.transactions-edit-button {
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.transactions-delete-button {
+  border: 1px solid #fecaca;
+  background: #fff1f2;
+  color: #b91c1c;
+}
+
+.transactions-confirm-button {
+  border: 1px solid #86efac;
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.transactions-discard-button {
+  border: 1px solid #fecaca;
+  background: #fff1f2;
+  color: #b91c1c;
+}
+
+.transactions-edit-button:disabled,
+.transactions-delete-button:disabled,
+.transactions-confirm-button:disabled,
+.transactions-discard-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.transactions-edit-button:hover:enabled {
+  background: #dbeafe;
+}
+
+.transactions-delete-button:hover:enabled {
+  background: #ffe4e6;
+}
+
+.transactions-confirm-button:hover:enabled {
+  background: #dcfce7;
+}
+
+.transactions-discard-button:hover:enabled {
+  background: #ffe4e6;
+}
+
+.transactions-inline-input {
+  width: 100%;
+  min-width: 8rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 0.35rem 0.45rem;
+}

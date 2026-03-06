@@ -1,0 +1,96 @@
+<main class="transactions">
+  <h1 class="transactions-title">Transactions</h1>
+
+  <div class="transactions-upload">
+    <input type="file" class="transactions-file-input" files.bind="selectedFiles" accept=".csv,text/csv" disabled.bind="isLoading || isUploading">
+    <button
+      class="transactions-button"
+      click.trigger="uploadSelectedFile()"
+      disabled.bind="isLoading || isUploading || selectedFile === null">
+      ${isUploading ? 'Uploading...' : 'Upload CSV'}
+    </button>
+  </div>
+  <p if.bind="uploadSuccessMessage" class="transactions-status transactions-status-success">${uploadSuccessMessage}</p>
+  <p if.bind="uploadErrorMessage" class="transactions-status transactions-status-error">${uploadErrorMessage}</p>
+  <p if.bind="deleteErrorMessage" class="transactions-status transactions-status-error">${deleteErrorMessage}</p>
+  <p if.bind="updateErrorMessage" class="transactions-status transactions-status-error">${updateErrorMessage}</p>
+
+  <p if.bind="isLoading" class="transactions-status">Loading transactions...</p>
+  <p if.bind="errorMessage" class="transactions-status transactions-status-error">${errorMessage}</p>
+
+  <table class="transactions-table">
+    <thead>
+      <tr>
+        <th>Transaction ID</th>
+        <th>Transaction Time</th>
+        <th>Amount</th>
+        <th>Description</th>
+        <th class="transactions-actions-column">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr repeat.for="transaction of transactions">
+        <td>${transaction.transactionId}</td>
+        <td if.bind="editingTransactionId !== transaction.transactionId">${formatDate(transaction.transactionTime)}</td>
+        <td else>
+          <input class="transactions-inline-input" value.bind="editModel.transactionTime">
+        </td>
+        <td if.bind="editingTransactionId !== transaction.transactionId">${formatAmount(transaction.transactionAmount)}</td>
+        <td else>
+          <input class="transactions-inline-input" value.bind="editModel.transactionAmount">
+        </td>
+        <td if.bind="editingTransactionId !== transaction.transactionId">${transaction.description}</td>
+        <td else>
+          <input class="transactions-inline-input" value.bind="editModel.description">
+        </td>
+        <td class="transactions-actions-column">
+          <div if.bind="editingTransactionId !== transaction.transactionId" class="transactions-actions">
+            <button
+              class="transactions-edit-button"
+              click.trigger="startEditing(transaction)"
+              disabled.bind="isLoading || isUploading || deletingTransactionId || updatingTransactionId || (editingTransactionId && editingTransactionId !== transaction.transactionId)"
+              title="Update transaction"
+              aria-label="Update transaction">
+              ✏️
+            </button>
+            <button
+              class="transactions-delete-button"
+              click.trigger="deleteTransaction(transaction.transactionId)"
+              disabled.bind="isLoading || isUploading || deletingTransactionId === transaction.transactionId || updatingTransactionId || editingTransactionId"
+              title="Delete transaction"
+              aria-label="Delete transaction">
+              🗑️
+            </button>
+          </div>
+          <div else class="transactions-actions">
+            <button
+              class="transactions-confirm-button"
+              click.trigger="confirmEdit()"
+              disabled.bind="isLoading || isUploading || deletingTransactionId || updatingTransactionId === transaction.transactionId"
+              title="Confirm update"
+              aria-label="Confirm update">
+              ✅
+            </button>
+            <button
+              class="transactions-discard-button"
+              click.trigger="discardEdit()"
+              disabled.bind="updatingTransactionId === transaction.transactionId"
+              title="Discard update"
+              aria-label="Discard update">
+              ❌
+            </button>
+          </div>
+        </td>
+      </tr>
+      <tr if.bind="!isLoading && !errorMessage && transactions.length === 0">
+        <td colspan="5">No transactions found.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="transactions-pagination">
+    <button class="transactions-button" click.trigger="previousPage()" disabled.bind="isLoading || pageNumber <= 1">Previous</button>
+    <span class="transactions-page">Page ${pageNumber} of ${totalPages}</span>
+    <button class="transactions-button" click.trigger="nextPage()" disabled.bind="isLoading || pageNumber >= totalPages">Next</button>
+  </div>
+</main>
