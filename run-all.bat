@@ -12,6 +12,14 @@ if errorlevel 1 (
   exit /b 1
 )
 
+docker info >nul 2>&1
+if errorlevel 1 (
+  echo Docker is installed but not running.
+  echo Please start Docker Desktop and try again.
+  pause
+  exit /b 1
+)
+
 echo Building backend image...
 docker compose build backend > compose-startup.log 2>&1
 if errorlevel 1 (
