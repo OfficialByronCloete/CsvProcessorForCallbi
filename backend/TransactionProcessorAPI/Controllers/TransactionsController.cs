@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using TransactionProcessor.Common.Models;
 using TransactionProcessor.Core.Contracts;
 
