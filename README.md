@@ -1,6 +1,6 @@
 # CSV Processor
 
-Technical assessment implementation for CSV import, validation, persistence, and dashboard display.
+Implementation for CSV import, validation, persistence, and dashboard display.
 
 ## Run with Docker (required)
 
